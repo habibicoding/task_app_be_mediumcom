@@ -75,6 +75,9 @@ out/
 # Ignore build folder
 build/
 
+# Ignore build folder
+.gradle/
+
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
