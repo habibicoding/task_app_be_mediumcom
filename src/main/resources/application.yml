@@ -1,0 +1,25 @@
+logging:
+  file:
+    name: app.log
+server:
+  error:
+    include-binding-errors: always
+    include-message: always
+    include-stacktrace: on_param
+  port: ${SERVER_PORT:8080}
+spring:
+  datasource:
+    username: ${DATASOURCE_USERNAME:sa}
+    password: ${DATASOURCE_PASSWORD:''}
+    url: ${DATASOURCE_URL:jdbc:h2:mem:testdb}
+    driver-class-name: ${DATASOURCE_DRIVER_CLASS_NAME:org.h2.Driver}
+  jpa:
+    database: ${JPA_DATABASE:h2}
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    show-sql: true
