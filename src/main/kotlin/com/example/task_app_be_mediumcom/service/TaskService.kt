@@ -57,13 +57,14 @@ class TaskService(private val repository: TaskRepository) {
         return convertEntityToDto(task)
     }
 
-    fun createTask(newTaskRequest: NewTaskRequest): Task {
+    fun createTask(newTaskRequest: NewTaskRequest): TaskDto {
         if (repository.doesDescriptionExist(newTaskRequest.description)) {
             throw BadRequestException("There is already a task with description: ${newTaskRequest.description}")
         }
         val task = Task()
         assignValuesToEntity(task, newTaskRequest)
-        return repository.save(task)
+        val savedTask = repository.save(task)
+        return convertEntityToDto(savedTask)
     }
 
     fun updateTask(id: Long, adaptTaskRequest: AdaptTaskRequest): TaskDto {
