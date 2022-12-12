@@ -1,13 +1,17 @@
 package com.example.task_app_be_mediumcom.service
 
 import com.example.task_app_be_mediumcom.data.Task
+import com.example.task_app_be_mediumcom.data.model.AdaptTaskRequest
+import com.example.task_app_be_mediumcom.data.model.NewTaskRequest
 import com.example.task_app_be_mediumcom.data.model.TaskDto
-import com.example.task_app_be_mediumcom.data.model.TaskRequest
 import com.example.task_app_be_mediumcom.exception.BadRequestException
 import com.example.task_app_be_mediumcom.exception.TaskNotFoundException
 import com.example.task_app_be_mediumcom.repository.TaskRepository
 import org.springframework.stereotype.Service
 import java.util.stream.Collectors
+import kotlin.reflect.full.memberProperties
+import org.springframework.util.ReflectionUtils
+import java.lang.reflect.Field
 
 @Service
 class TaskService(private val repository: TaskRepository) {
@@ -23,7 +27,7 @@ class TaskService(private val repository: TaskRepository) {
         )
     }
 
-    private fun assignValuesToEntity(task: Task, taskRequest: TaskRequest) {
+    private fun assignValuesToEntity(task: Task, taskRequest: NewTaskRequest) {
         task.description = taskRequest.description
         task.isReminderSet = taskRequest.isReminderSet
         task.isTaskOpen = taskRequest.isTaskOpen
@@ -53,23 +57,30 @@ class TaskService(private val repository: TaskRepository) {
         return convertEntityToDto(task)
     }
 
-    fun createTask(taskRequest: TaskRequest): Task {
-        if (repository.doesDescriptionExist(taskRequest.description)) {
-            throw BadRequestException("There is already a task with description: ${taskRequest.description}")
+    fun createTask(newTaskRequest: NewTaskRequest): Task {
+        if (repository.doesDescriptionExist(newTaskRequest.description)) {
+            throw BadRequestException("There is already a task with description: ${newTaskRequest.description}")
         }
         val task = Task()
-        assignValuesToEntity(task, taskRequest)
+        assignValuesToEntity(task, newTaskRequest)
         return repository.save(task)
     }
 
-    fun updateTask(taskRequest: TaskRequest): TaskDto {
-        checkForTaskId(taskRequest.id)
-        val savedTask: Task
-        val task: Task = repository.findTaskById(taskRequest.id)
-        if (taskRequest.description.isNotEmpty()) {
-            assignValuesToEntity(task, taskRequest)
+    fun updateTask(id: Long, adaptTaskRequest: AdaptTaskRequest): TaskDto {
+        checkForTaskId(id)
+        val existingTask: Task = repository.findTaskById(id)
+
+        for (prop in AdaptTaskRequest::class.memberProperties) {
+            if (prop.get(adaptTaskRequest) != null) {
+                val field: Field? = ReflectionUtils.findField(Task::class.java, prop.name)
+                field?.let {
+                    it.isAccessible = true
+                    ReflectionUtils.setField(it, existingTask, prop.get(adaptTaskRequest))
+                }
+            }
         }
-        savedTask = repository.save(task)
+
+        val savedTask: Task = repository.save(existingTask)
         return convertEntityToDto(savedTask)
     }
 
