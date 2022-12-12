@@ -3,7 +3,7 @@ package com.example.task_app_be_mediumcom.data.model
 import jakarta.validation.constraints.NotBlank
 import java.time.LocalDateTime
 
-data class NewTaskRequest(
+data class TaskCreateRequest(
         @NotBlank(message = "task id can't be empty")
         val id: Long,
 
