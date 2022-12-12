@@ -1,7 +1,8 @@
 package com.example.task_app_be_mediumcom.controller
 
+import com.example.task_app_be_mediumcom.data.model.AdaptTaskRequest
+import com.example.task_app_be_mediumcom.data.model.NewTaskRequest
 import com.example.task_app_be_mediumcom.data.model.TaskDto
-import com.example.task_app_be_mediumcom.data.model.TaskRequest
 import com.example.task_app_be_mediumcom.service.TaskService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -26,19 +27,9 @@ class TaskController(private val service: TaskService) {
         ResponseEntity(service.getTaskById(id), HttpStatus.OK)
 
     @PostMapping("create")
-    fun createTask(@Valid @RequestBody taskRequest: TaskRequest): ResponseEntity<TaskDto> {
-        val task = service.createTask(taskRequest)
-        return ResponseEntity(
-            TaskDto(
-                task.id,
-                task.description,
-                task.isReminderSet,
-                task.isTaskOpen,
-                task.createdOn,
-                task.priority
-            ), HttpStatus.OK
-        )
-    }
+    fun createTask(
+        @Valid @RequestBody newTaskRequest: NewTaskRequest
+    ): ResponseEntity<TaskDto> = ResponseEntity(service.createTask(newTaskRequest), HttpStatus.OK)
 
     @PutMapping("update")
     fun updateTask(@Valid @RequestBody taskRequest: TaskRequest): ResponseEntity<TaskDto> =
