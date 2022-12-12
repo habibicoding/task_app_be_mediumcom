@@ -1,8 +1,8 @@
 package com.example.task_app_be_mediumcom.controller
 
-import com.example.task_app_be_mediumcom.data.model.AdaptTaskRequest
-import com.example.task_app_be_mediumcom.data.model.NewTaskRequest
+import com.example.task_app_be_mediumcom.data.model.TaskCreateRequest
 import com.example.task_app_be_mediumcom.data.model.TaskDto
+import com.example.task_app_be_mediumcom.data.model.TaskUpdateRequest
 import com.example.task_app_be_mediumcom.service.TaskService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
@@ -28,14 +28,14 @@ class TaskController(private val service: TaskService) {
 
     @PostMapping("create")
     fun createTask(
-        @Valid @RequestBody newTaskRequest: NewTaskRequest
-    ): ResponseEntity<TaskDto> = ResponseEntity(service.createTask(newTaskRequest), HttpStatus.OK)
+        @Valid @RequestBody createRequest: TaskCreateRequest
+    ): ResponseEntity<TaskDto> = ResponseEntity(service.createTask(createRequest), HttpStatus.OK)
 
     @PatchMapping("update/{id}")
     fun updateTask(
         @PathVariable id: Long,
-        @Valid @RequestBody adaptTaskRequest: AdaptTaskRequest
-    ): ResponseEntity<TaskDto> = ResponseEntity(service.updateTask(id, adaptTaskRequest), HttpStatus.OK)
+        @Valid @RequestBody updateRequest: TaskUpdateRequest
+    ): ResponseEntity<TaskDto> = ResponseEntity(service.updateTask(id, updateRequest), HttpStatus.OK)
 
     @DeleteMapping("delete/{id}")
     fun deleteTask(@PathVariable id: Long): ResponseEntity<String> =
