@@ -31,5 +31,35 @@ internal class TaskRepositoryTestEmbedded {
         assertThat(tasks.size).isEqualTo(numberOfRecordsInTestDataSql)
     }
 
+    @Test
+    @Sql("classpath:test-data.sql")
+    fun `when task saved through SQL file then remove it by id`() {
+        objectUnderTest.deleteById(112)
+        val tasks: List<Task> = objectUnderTest.findAll()
+        assertThat(tasks.size).isEqualTo(2)
+    }
 
+    @Test
+    @Sql("classpath:test-data.sql")
+    fun `when task saved through SQL file then check for the number of open tasks`() {
+        val tasks: List<Task> = objectUnderTest.queryAllOpenTasks()
+        assertThat(tasks.size).isEqualTo(numberOfOpenTasksInTestDataSql)
+    }
+
+    @Test
+    @Sql("classpath:test-data.sql")
+    fun `when task saved through SQL file then check for the number of closed tasks`() {
+        val tasks: List<Task> = objectUnderTest.queryAllClosedTasks()
+        assertThat(tasks.size).isEqualTo(numberOfClosedTasksInTestDataSql)
+    }
+
+    @Test
+    @Sql("classpath:test-data.sql")
+    fun `when description is queried then check if descriptions already exists`() {
+        val isDescriptionAlreadyGiven1 = objectUnderTest.doesDescriptionExist("first test todo")
+        val isDescriptionAlreadyGiven2 = objectUnderTest.doesDescriptionExist("any todo")
+
+        assertThat(isDescriptionAlreadyGiven1).isTrue
+        assertThat(isDescriptionAlreadyGiven2).isFalse
+    }
 }
