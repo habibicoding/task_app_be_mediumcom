@@ -20,7 +20,11 @@ internal class TaskRepositoryTestEmbedded {
     @Test
     @Sql("classpath:test-data.sql")
     fun `when task saved through SQL file then check if it is not null`() {
+        // GIVEN
+        // WHEN
         val task: Task = objectUnderTest.findTaskById(111)
+
+        // THEN
         assertThat(task).isNotNull
     }
 
