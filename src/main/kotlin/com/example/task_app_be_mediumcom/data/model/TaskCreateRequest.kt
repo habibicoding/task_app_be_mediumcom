@@ -4,9 +4,6 @@ import jakarta.validation.constraints.NotBlank
 import java.time.LocalDateTime
 
 data class TaskCreateRequest(
-        @NotBlank(message = "task id can't be empty")
-        val id: Long,
-
         @NotBlank(message = "description can't be empty")
         val description: String,
 
