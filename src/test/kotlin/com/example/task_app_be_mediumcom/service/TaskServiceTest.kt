@@ -39,7 +39,6 @@ internal class TaskServiceTest {
     fun setUp() {
         MockKAnnotations.init(this)
         createRequest = TaskCreateRequest(
-            0,
             "test task",
             isReminderSet = false,
             isTaskOpen = false,
