@@ -154,7 +154,6 @@ internal class TaskControllerIntegrationTest(@Autowired private val mockMvc: Moc
     @Test
     fun `given create task request when task gets created then check for correct property`() {
         val request = TaskCreateRequest(
-            0,
             "test for db",
             isReminderSet = false,
             isTaskOpen = false,
