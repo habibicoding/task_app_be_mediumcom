@@ -60,15 +60,16 @@ internal class TaskControllerIntegrationTest(@Autowired private val mockMvc: Moc
             createdOn = LocalDateTime.now(),
             priority = Priority.LOW
         )
+        val expectedDtos: List<TaskDto> = listOf(dummyDto1, taskDto2)
 
         // WHEN
-        `when`(mockService.getAllTasks()).thenReturn(listOf(dummyDto1, taskDto2))
+        `when`(mockService.getAllTasks()).thenReturn(expectedDtos)
         val resultActions: ResultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/all-tasks"))
 
         // THEN
         resultActions.andExpect(MockMvcResultMatchers.status().`is`(200))
         resultActions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        resultActions.andExpect(jsonPath("$.size()").value(2))
+        resultActions.andExpect(jsonPath("$.size()").value(expectedDtos.size))
     }
 
     @Test
