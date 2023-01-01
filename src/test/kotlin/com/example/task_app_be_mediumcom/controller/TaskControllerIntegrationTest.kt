@@ -80,36 +80,6 @@ internal class TaskControllerIntegrationTest(@Autowired private val mockMvc: Moc
     }
 
     @Test
-    fun `given update task request when task gets updated then check for correct property`() {
-        val request = TaskUpdateRequest(
-            "update task",
-            isReminderSet = false,
-            isTaskOpen = false,
-            priority = Priority.LOW
-        )
-        val dummyDto = TaskDto(
-            44,
-            request.description ?: "",
-            isReminderSet = false,
-            isTaskOpen = false,
-            createdOn = LocalDateTime.now(),
-            priority = Priority.LOW
-        )
-
-        `when`(mockService.updateTask(dummyDto.id, request)).thenReturn(dummyDto)
-        val resultActions: ResultActions = mockMvc.perform(
-            MockMvcRequestBuilders.patch("/api/update/${dummyDto.id}")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(request))
-        )
-
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk)
-        resultActions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        resultActions.andExpect(jsonPath("$.description").value(dummyDto.description))
-    }
-
-
-    @Test
     fun `given open tasks when fetch happen then check for size and isTaskOpen is true`() {
         val taskDto2 = TaskDto(
             44,
@@ -150,6 +120,35 @@ internal class TaskControllerIntegrationTest(@Autowired private val mockMvc: Moc
         resultActions.andExpect(MockMvcResultMatchers.status().`is`(200))
         resultActions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
         resultActions.andExpect(jsonPath("$.description").value(dummyDto1.description))
+    }
+
+    @Test
+    fun `given update task request when task gets updated then check for correct property`() {
+        val request = TaskUpdateRequest(
+            "update task",
+            isReminderSet = false,
+            isTaskOpen = false,
+            priority = Priority.LOW
+        )
+        val dummyDto = TaskDto(
+            44,
+            request.description ?: "",
+            isReminderSet = false,
+            isTaskOpen = false,
+            createdOn = LocalDateTime.now(),
+            priority = Priority.LOW
+        )
+
+        `when`(mockService.updateTask(dummyDto.id, request)).thenReturn(dummyDto)
+        val resultActions: ResultActions = mockMvc.perform(
+            MockMvcRequestBuilders.patch("/api/update/${dummyDto.id}")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(request))
+        )
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isOk)
+        resultActions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        resultActions.andExpect(jsonPath("$.description").value(dummyDto.description))
     }
 
     @Test
