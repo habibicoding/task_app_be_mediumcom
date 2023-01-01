@@ -4,6 +4,7 @@ import com.example.task_app_be_mediumcom.data.model.Priority
 import com.example.task_app_be_mediumcom.data.model.TaskCreateRequest
 import com.example.task_app_be_mediumcom.data.model.TaskDto
 import com.example.task_app_be_mediumcom.data.model.TaskUpdateRequest
+import com.example.task_app_be_mediumcom.exception.TaskNotFoundException
 import com.example.task_app_be_mediumcom.service.TaskService
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -77,6 +78,14 @@ internal class TaskControllerIntegrationTest(@Autowired private val mockMvc: Moc
         val resultActions: ResultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/task/404L"))
 
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest)
+    }
+
+    @Test
+    fun `when task id does not exist then expect is not found response`() {
+        `when`(mockService.getTaskById(taskId)).thenThrow(TaskNotFoundException("Task with id: $taskId does not exist!"))
+        val resultActions: ResultActions = mockMvc.perform(MockMvcRequestBuilders.get("/api/task/$taskId"))
+
+        resultActions.andExpect(MockMvcResultMatchers.status().isNotFound)
     }
 
     @Test
