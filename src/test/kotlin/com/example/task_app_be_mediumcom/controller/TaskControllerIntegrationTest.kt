@@ -126,7 +126,7 @@ internal class TaskControllerIntegrationTest(@Autowired private val mockMvc: Moc
         resultActions.andExpect(MockMvcResultMatchers.status().`is`(200))
         resultActions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
         resultActions.andExpect(jsonPath("$.size()").value(1))
-        resultActions.andExpect(jsonPath("$[0].isTaskOpen").value(true))
+        resultActions.andExpect(jsonPath("$[0].isTaskOpen").value(taskDto2.isTaskOpen))
     }
 
     @Test
@@ -139,7 +139,7 @@ internal class TaskControllerIntegrationTest(@Autowired private val mockMvc: Moc
         resultActions.andExpect(MockMvcResultMatchers.status().`is`(200))
         resultActions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
         resultActions.andExpect(jsonPath("$.size()").value(1))
-        resultActions.andExpect(jsonPath("$[0].isTaskOpen").value(false))
+        resultActions.andExpect(jsonPath("$[0].isTaskOpen").value(dummyDto1.isTaskOpen))
     }
 
     @Test
@@ -149,7 +149,7 @@ internal class TaskControllerIntegrationTest(@Autowired private val mockMvc: Moc
 
         resultActions.andExpect(MockMvcResultMatchers.status().`is`(200))
         resultActions.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        resultActions.andExpect(jsonPath("$.description").value("test1"))
+        resultActions.andExpect(jsonPath("$.description").value(dummyDto1.description))
     }
 
     @Test
