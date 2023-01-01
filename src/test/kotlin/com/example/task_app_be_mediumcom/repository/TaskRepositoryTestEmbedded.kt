@@ -40,7 +40,7 @@ internal class TaskRepositoryTestEmbedded {
     fun `when task saved through SQL file then remove it by id`() {
         objectUnderTest.deleteById(112)
         val tasks: List<Task> = objectUnderTest.findAll()
-        assertThat(tasks.size).isEqualTo(2)
+        assertThat(tasks.size).isEqualTo(numberOfRecordsInTestDataSql - 1)
     }
 
     @Test
